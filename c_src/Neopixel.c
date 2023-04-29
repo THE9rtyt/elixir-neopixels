@@ -123,9 +123,6 @@ void hsvrgb() {
 }
 
 /*
-using blinkchain as a reference I have reversed engineered the I/O 
-between C and Elixir :poggies:
-
 args:
 1 - dma channel
 2 - strip 1 pin
