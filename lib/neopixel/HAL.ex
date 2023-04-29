@@ -1,4 +1,4 @@
-defmodule Neopixel.HAL do
+defmodule Neopixel.Server do
   @moduledoc """
   handles the Neopixel C application which wraps the rpi_ws218x driver
   """
