@@ -1,4 +1,4 @@
-defmodule Circuits.Neopixels.Guards do
+defmodule Neopixel.Guards do
   @moduledoc false
 
   defguard is_strip(s)

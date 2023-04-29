@@ -13,7 +13,7 @@ CFLAGS += -std=c99 -D_GNU_SOURCE
 PREFIX = $(MIX_APP_PATH)/priv
 BUILD  = $(MIX_APP_PATH)/obj
 
-SRC = c_src/RGB.c c_src/hsv.c \
+SRC = c_src/Neopixel.c c_src/hsv.c \
   c_src/rpi_ws281x/dma.c c_src/rpi_ws281x/mailbox.c c_src/rpi_ws281x/pwm.c \
   c_src/rpi_ws281x/rpihw.c c_src/rpi_ws281x/pcm.c c_src/rpi_ws281x/ws2811.c
 
@@ -24,7 +24,7 @@ OBJ = $(patsubst c_src/%, $(BUILD)/%, $(SRC:.c=.o))
 calling_from_make:
 	mix compile
 
-all: $(PREFIX) $(BUILD) $(BUILD)/rpi_ws281x $(PREFIX)/RGB
+all: $(PREFIX) $(BUILD) $(BUILD)/rpi_ws281x $(PREFIX)/Neopixel
 
 $(PREFIX) $(BUILD) $(BUILD)/rpi_ws281x:
 	mkdir -p $@
@@ -33,7 +33,7 @@ $(BUILD)/%.o: c_src/%.c
 	@echo " CC $(notdir $@)"
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(PREFIX)/RGB: $(OBJ)
+$(PREFIX)/Neopixel: $(OBJ)
 	@echo " LD $(notdir $@)"
 	$(CC) $^ $(LDFLAGS) -o $@
 

@@ -1,5 +1,5 @@
-#ifndef RGB_TYPES_H
-#define RGB_TYPES_H
+#ifndef NEOPIXEL_TYPES_H
+#define NEOPIXEL_TYPES_H
 
 #include <stdint.h>
 

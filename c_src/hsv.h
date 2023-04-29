@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #include "rpi_ws281x/ws2811.h"
-#include "RGB_types.h"
+#include "Neopixel_types.h"
 
 #define THIRD 0x56
 

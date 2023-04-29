@@ -1,9 +1,9 @@
-defmodule Circuits.Neopixels.HAL do
+defmodule Neopixel.HAL do
   @moduledoc """
-  handles the RGB C application which wraps the rpi_ws218x driver
+  handles the Neopixel C application which wraps the rpi_ws218x driver
   """
 
-  import Circuits.Neopixels.Guards
+  import Neopixel.Guards
 
   use GenServer
 
@@ -63,7 +63,7 @@ defmodule Circuits.Neopixels.HAL do
     GenServer.call(__MODULE__, :render)
   end
 
-  # test function for sending commands calls directly to RGB
+  # test function for sending commands calls directly to Neopixel
   @doc false
   def send(command) do
     GenServer.call(__MODULE__, {:send, command})
@@ -76,9 +76,9 @@ defmodule Circuits.Neopixels.HAL do
 
   @doc false
   def init(_args) do
-    file = Application.app_dir(:circuits_neopixels, ["priv", "RGB"]) |> String.to_charlist()
+    file = Application.app_dir(:neopixels, ["priv", "Neopixel"]) |> String.to_charlist()
 
-    config = Application.get_all_env(:circuits_neopixels)
+    config = Application.get_all_env(:neopixels)
 
     port = connect_to_port(file, config)
 
@@ -119,8 +119,8 @@ defmodule Circuits.Neopixels.HAL do
     {:reply, send_to_port("set_brightness #{strip} #{brightness}", state.port), state}
   end
 
-  def handle_call({:hsvrgb, hsvcolor}, _from, state) do
-    {:reply, send_to_port("hsvrgb 0x#{hsvcolor}", state.port), state}
+  def handle_call({:hsvNeopixel, hsvcolor}, _from, state) do
+    {:reply, send_to_port("hsvNeopixel 0x#{hsvcolor}", state.port), state}
   end
 
   def handle_call(:render, _from, state) do
@@ -139,22 +139,22 @@ defmodule Circuits.Neopixels.HAL do
   end
 
   def handle_info({_port, {:data, {_, 'OK'}}}, state) do
-    Logger.info("RGB: OK")
+    Logger.info("Neopixel: OK")
     {:noreply, state}
   end
 
   def handle_info({_port, {:data, {_, 'OK: ' ++ payload}}}, state) do
-    Logger.info("RGB: #{payload}")
+    Logger.info("Neopixel: #{payload}")
     {:noreply, state}
   end
 
   def handle_info({_port, {:data, {_, 'DBG: ' ++ payload}}}, state) do
-    Logger.debug("RGB: #{payload}")
+    Logger.debug("Neopixel: #{payload}")
     {:noreply, state}
   end
 
   def handle_info({_port, {:data, {_, 'ERR: ' ++ payload}}}, state) do
-    Logger.error("RGB: #{payload}")
+    Logger.error("Neopixel: #{payload}")
     {:noreply, state}
   end
 
@@ -163,7 +163,7 @@ defmodule Circuits.Neopixels.HAL do
   end
 
   def handle_info({_port, {:exit_status, status}}, state) do
-    Logger.error("RGB: died with exit_status: #{status}")
+    Logger.error("Neopixel: died with exit_status: #{status}")
     {:noreply, state}
   end
 
@@ -186,7 +186,7 @@ defmodule Circuits.Neopixels.HAL do
   end
 
   defp send_to_port(command, port) do
-    Logger.debug("RGB: sending command \"#{command}\"")
+    Logger.debug("Neopixel: sending command \"#{command}\"")
     Port.command(port, command <> "\n")
     recieve_from_port(port)
   end
@@ -203,10 +203,10 @@ defmodule Circuits.Neopixels.HAL do
         {:error, to_string(payload)}
 
       {^port, {:exit_status, status}} ->
-        Logger.error("RGB has died with exit_status: #{status}")
-        raise "RGB has died with exit_status: #{status}"
+        Logger.error("Neopixel has died with exit_status: #{status}")
+        raise "Neopixel has died with exit_status: #{status}"
     after
-      500 -> {:error, "timeout waiting for RGB to reply"}
+      500 -> {:error, "timeout waiting for Neopixel to reply"}
     end
   end
 end

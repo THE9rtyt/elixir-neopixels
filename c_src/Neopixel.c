@@ -1,4 +1,4 @@
-//Main RGB program for circuits_neopixels Hardware Abstraction Layer.
+//Main Neopixel program for Neopixel Hardware Abstraction Layer.
 //does all of the communication and handling of the rpi_ws281x driver
 
 #include <limits.h>
