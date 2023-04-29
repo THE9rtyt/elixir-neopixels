@@ -1,6 +1,11 @@
 defmodule Neopixel.Server do
   @moduledoc """
-  handles the Neopixel C application which wraps the rpi_ws218x driver
+  # Options:
+  * `:dma_channel` the dma channel the neopixel driver will use
+  * `:strip0_pin` pin number running strip 0
+  * `:strip1_pin` pin number running strip 1
+  * `:strip0_length` number of leds on strip 0
+  * `:strip1_length` number of leds on strip 1
   """
 
   import Neopixel.Guards
@@ -75,10 +80,16 @@ defmodule Neopixel.Server do
   end
 
   @doc false
-  def init(_args) do
+  def init(args) do
     file = Application.app_dir(:neopixels, ["priv", "Neopixel"]) |> String.to_charlist()
 
-    config = Application.get_all_env(:neopixels)
+    config = [
+      "#{args[:dma_channel] || 10}",
+      "#{Keyword.fetch!(args, :strip0_pin)}",
+      "#{Keyword.fetch!(args, :strip0_length)}",
+      "#{Keyword.fetch!(args, :strip1_pin)}",
+      "#{Keyword.fetch!(args, :strip1_length)}"
+    ]
 
     port = connect_to_port(file, config)
 
@@ -167,14 +178,7 @@ defmodule Neopixel.Server do
     {:noreply, state}
   end
 
-  defp connect_to_port(file, config) do
-    args = [
-      "#{config[:dma_channel]}",
-      "#{config[:strip0_pin]}",
-      "#{config[:strip0_length]}",
-      "#{config[:strip1_pin]}",
-      "#{config[:strip1_length]}"
-    ]
+  defp connect_to_port(file, args) do
 
     Port.open({:spawn_executable, file}, [
       {:args, args},
